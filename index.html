@@ -45,15 +45,18 @@
             </div>
             <nav class="space-y-2 flex-1">
                 <p class="text-xs uppercase tracking-[2px] text-orange-400 font-semibold mb-4">MANAGEMENT</p>
-                <button class="flex items-center gap-3 w-full text-left py-3 px-4 rounded-2xl bg-white/10 text-orange-500 font-bold transition">
+                <button onclick="switchTab('tracks')" id="tab-tracks" class="flex items-center gap-3 w-full text-left py-3 px-4 rounded-2xl bg-white/10 text-orange-500 font-bold transition">
                     <i data-lucide="music" class="w-5 h-5"></i> Manage Tracks
+                </button>
+                <button onclick="switchTab('banner')" id="tab-banner" class="flex items-center gap-3 w-full text-left py-3 px-4 rounded-2xl text-gray-400 hover:bg-white/10 hover:text-white transition">
+                    <i data-lucide="image" class="w-5 h-5"></i> Update Banner
                 </button>
             </nav>
         </aside>
 
         <div class="flex-1 flex flex-col overflow-y-auto no-scrollbar">
             <header class="h-16 glass border-b border-white/10 px-6 md:px-10 flex items-center justify-between sticky top-0 z-40">
-                <h1 class="font-bold text-xl">Track Manager</h1>
+                <h1 class="font-bold text-xl" id="page-title">Track Manager</h1>
                 <div class="flex items-center gap-3">
                     <div class="text-right">
                         <p class="text-sm font-semibold">System Admin</p>
@@ -64,57 +67,124 @@
 
             <div class="px-6 md:px-10 py-8 max-w-6xl mx-auto w-full">
                 
-                <div class="glass border border-white/10 rounded-3xl p-8 mb-10 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-1 hero-gradient"></div>
-                    <h2 class="text-2xl font-bold mb-6">Upload New Track</h2>
-                    
-                    <form id="upload-form" class="space-y-5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm text-gray-400 mb-2">Song Title</label>
-                                <input type="text" id="title" required class="w-full rounded-xl py-3 px-4" placeholder="e.g. Mnike">
+                <!-- TRACKS SECTION -->
+                <div id="tracks-section" class="section">
+                    <div class="glass border border-white/10 rounded-3xl p-8 mb-10 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hero-gradient"></div>
+                        <h2 class="text-2xl font-bold mb-6">Upload New Track</h2>
+                        
+                        <form id="upload-form" class="space-y-5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Song Title</label>
+                                    <input type="text" id="title" required class="w-full rounded-xl py-3 px-4" placeholder="e.g. Mnike">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Artist Name</label>
+                                    <input type="text" id="artist" required class="w-full rounded-xl py-3 px-4" placeholder="e.g. Tyler ICU">
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm text-gray-400 mb-2">Artist Name</label>
-                                <input type="text" id="artist" required class="w-full rounded-xl py-3 px-4" placeholder="e.g. Tyler ICU">
-                            </div>
-                        </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm text-gray-400 mb-2">Cover Image (JPG/PNG)</label>
-                                <input type="file" id="cover-file" accept="image/*" required class="w-full rounded-xl py-2 px-4 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-orange-500 file:text-white hover:file:bg-orange-600">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Cover Image (JPG/PNG)</label>
+                                    <input type="file" id="cover-file" accept="image/*" required class="w-full rounded-xl py-2 px-4 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-orange-500 file:text-white hover:file:bg-orange-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Audio File (MP3/WAV)</label>
+                                    <input type="file" id="audio-file" accept="audio/*" required class="w-full rounded-xl py-2 px-4 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-purple-500 file:text-white hover:file:bg-purple-600">
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm text-gray-400 mb-2">Audio File (MP3/WAV)</label>
-                                <input type="file" id="audio-file" accept="audio/*" required class="w-full rounded-xl py-2 px-4 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-purple-500 file:text-white hover:file:bg-purple-600">
-                            </div>
-                        </div>
 
-                        <div class="pt-4 flex items-center gap-4">
-                            <button type="submit" id="submit-btn" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition flex items-center gap-2">
-                                <i data-lucide="upload-cloud" class="w-5 h-5"></i> Publish Track
-                            </button>
-                            <span id="status-text" class="text-sm font-medium text-orange-400 hidden">Uploading to Cloudinary... Please wait.</span>
+                            <div class="pt-4 flex items-center gap-4">
+                                <button type="submit" id="submit-btn" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition flex items-center gap-2">
+                                    <i data-lucide="upload-cloud" class="w-5 h-5"></i> Publish Track
+                                </button>
+                                <span id="status-text" class="text-sm font-medium text-orange-400 hidden">Uploading to Cloudinary... Please wait.</span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold mb-6">Live Database</h2>
+                        <div class="glass rounded-3xl overflow-hidden border border-white/10">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-white/5 text-gray-400 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="p-5 font-semibold">Cover</th>
+                                        <th class="p-5 font-semibold">Title & Artist</th>
+                                        <th class="p-5 font-semibold">Audio URL</th>
+                                        <th class="p-5 font-semibold text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tracks-table" class="divide-y divide-white/5">
+                                    </tbody>
+                            </table>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
-                <div>
-                    <h2 class="text-2xl font-bold mb-6">Live Database</h2>
-                    <div class="glass rounded-3xl overflow-hidden border border-white/10">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-white/5 text-gray-400 uppercase tracking-wider">
-                                <tr>
-                                    <th class="p-5 font-semibold">Cover</th>
-                                    <th class="p-5 font-semibold">Title & Artist</th>
-                                    <th class="p-5 font-semibold">Audio URL</th>
-                                    <th class="p-5 font-semibold text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tracks-table" class="divide-y divide-white/5">
-                                </tbody>
-                        </table>
+                <!-- BANNER SECTION -->
+                <div id="banner-section" class="section hidden">
+                    <div class="glass border border-white/10 rounded-3xl p-8 mb-10 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hero-gradient"></div>
+                        <h2 class="text-2xl font-bold mb-6">Update Hero Banner</h2>
+                        <p class="text-gray-400 mb-6">This banner appears at the top of the user interface on the home page.</p>
+                        
+                        <form id="banner-form" class="space-y-5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Banner Title</label>
+                                    <input type="text" id="banner-title" required class="w-full rounded-xl py-3 px-4" placeholder="e.g. ASANTE SANA">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Subtitle / Artist</label>
+                                    <input type="text" id="banner-subtitle" required class="w-full rounded-xl py-3 px-4" placeholder="e.g. Kabza De Small & DJ Maphorisa • Amapiano 2026">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Tagline (Optional)</label>
+                                <input type="text" id="banner-tagline" class="w-full rounded-xl py-3 px-4" placeholder="e.g. TRENDING IN GAUTENG">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Banner Background Image</label>
+                                    <input type="file" id="banner-image-file" accept="image/*" class="w-full rounded-xl py-2 px-4 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-orange-500 file:text-white hover:file:bg-orange-600">
+                                    <p class="text-xs text-gray-500 mt-2">Leave empty to keep current image</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Or Banner Image URL</label>
+                                    <input type="text" id="banner-image-url" class="w-full rounded-xl py-3 px-4" placeholder="https://example.com/image.jpg">
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex items-center gap-4">
+                                <button type="submit" id="banner-submit-btn" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition flex items-center gap-2">
+                                    <i data-lucide="save" class="w-5 h-5"></i> Update Banner
+                                </button>
+                                <span id="banner-status-text" class="text-sm font-medium text-orange-400 hidden">Updating banner...</span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold mb-6">Current Banner Preview</h2>
+                        <div id="current-banner-preview" class="glass border border-white/10 rounded-3xl p-8 relative overflow-hidden">
+                            <div class="hero-gradient rounded-3xl p-8 md:p-16 relative overflow-hidden shadow-2xl">
+                                <div class="max-w-md">
+                                    <div id="preview-tagline" class="uppercase tracking-[3px] text-xs font-bold mb-3 text-white/80">TRENDING IN GAUTENG</div>
+                                    <h1 id="preview-title" class="text-5xl md:text-7xl font-black leading-none tracking-tighter mb-4">ASANTE SANA</h1>
+                                    <p id="preview-subtitle" class="text-lg text-white/90 mb-8">Kabza De Small & DJ Maphorisa • Amapiano 2026</p>
+                                    <button class="bg-white text-black px-10 py-4 rounded-full font-bold text-lg flex items-center gap-3 opacity-50 cursor-not-allowed">
+                                        <i data-lucide="play" class="w-6 h-6"></i>
+                                        PLAY NOW
+                                    </button>
+                                </div>
+                                <img id="preview-image" src="https://picsum.photos/id/1015/800/600" class="absolute -bottom-12 -right-12 w-96 opacity-30 md:opacity-60 pointer-events-none">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -124,7 +194,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, onValue, remove, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // 1. SETUP FIREBASE
         const firebaseConfig = {
@@ -141,15 +211,27 @@
         const db = getDatabase(app);
 
         // 2. SETUP CLOUDINARY
-        const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dqkujefxj";
-        const UPLOAD_PRESET = "banter_box"; // Must be set to 'Unsigned' in Cloudinary Settings
+        const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME";
+        const UPLOAD_PRESET = "YOUR_UNSIGNED_PRESET"; // Must be set to 'Unsigned' in Cloudinary Settings
 
         // Initialize UI Icons
         lucide.createIcons();
 
-        const form = document.getElementById('upload-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const statusText = document.getElementById('status-text');
+        // Tab switching
+        window.switchTab = function(tab) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(tab + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('nav button').forEach(b => {
+                b.classList.remove('bg-white/10', 'text-orange-500', 'font-bold');
+                b.classList.add('text-gray-400');
+            });
+            
+            document.getElementById('tab-' + tab).classList.remove('text-gray-400');
+            document.getElementById('tab-' + tab).classList.add('bg-white/10', 'text-orange-500', 'font-bold');
+            
+            document.getElementById('page-title').textContent = tab === 'tracks' ? 'Track Manager' : 'Banner Manager';
+        };
 
         // Handle File Upload to Cloudinary via REST API
         async function uploadToCloudinary(file, resourceType) {
@@ -166,7 +248,11 @@
             return data.secure_url;
         }
 
-        // Handle Form Submission
+        // Handle Track Form Submission
+        const form = document.getElementById('upload-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const statusText = document.getElementById('status-text');
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -213,6 +299,78 @@
             }
         });
 
+        // Handle Banner Form Submission
+        const bannerForm = document.getElementById('banner-form');
+        const bannerSubmitBtn = document.getElementById('banner-submit-btn');
+        const bannerStatusText = document.getElementById('banner-status-text');
+
+        bannerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('banner-title').value;
+            const subtitle = document.getElementById('banner-subtitle').value;
+            const tagline = document.getElementById('banner-tagline').value;
+            const imageFile = document.getElementById('banner-image-file').files[0];
+            const imageUrl = document.getElementById('banner-image-url').value;
+
+            bannerSubmitBtn.disabled = true;
+            bannerSubmitBtn.classList.add('opacity-50');
+            bannerStatusText.classList.remove('hidden');
+
+            try {
+                let finalImageUrl = imageUrl;
+
+                // If file selected, upload to Cloudinary
+                if (imageFile) {
+                    bannerStatusText.innerText = "Uploading banner image...";
+                    finalImageUrl = await uploadToCloudinary(imageFile, 'image');
+                }
+
+                // Save to Firebase under 'banner' node
+                bannerStatusText.innerText = "Saving banner settings...";
+                await set(ref(db, 'banner'), {
+                    title: title,
+                    subtitle: subtitle,
+                    tagline: tagline || 'TRENDING IN GAUTENG',
+                    image: finalImageUrl || 'https://picsum.photos/id/1015/800/600',
+                    updatedAt: Date.now()
+                });
+
+                updateBannerPreview({ title, subtitle, tagline, image: finalImageUrl });
+                alert("Banner updated successfully!");
+            } catch (error) {
+                console.error(error);
+                alert("Banner update failed: " + error.message);
+            } finally {
+                bannerSubmitBtn.disabled = false;
+                bannerSubmitBtn.classList.remove('opacity-50');
+                bannerStatusText.classList.add('hidden');
+            }
+        });
+
+        // Update banner preview
+        function updateBannerPreview(data) {
+            if (data.tagline) document.getElementById('preview-tagline').textContent = data.tagline;
+            if (data.title) document.getElementById('preview-title').textContent = data.title;
+            if (data.subtitle) document.getElementById('preview-subtitle').textContent = data.subtitle;
+            if (data.image) document.getElementById('preview-image').src = data.image;
+        }
+
+        // Load current banner settings
+        function loadBannerSettings() {
+            const bannerRef = ref(db, 'banner');
+            get(bannerRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    document.getElementById('banner-title').value = data.title || '';
+                    document.getElementById('banner-subtitle').value = data.subtitle || '';
+                    document.getElementById('banner-tagline').value = data.tagline || '';
+                    document.getElementById('banner-image-url').value = data.image || '';
+                    updateBannerPreview(data);
+                }
+            });
+        }
+
         // Fetch and Render Data from Firebase
         const tracksTable = document.getElementById('tracks-table');
         onValue(ref(db, 'songs'), (snapshot) => {
@@ -256,6 +414,9 @@
                 await remove(ref(db, `songs/${id}`));
             }
         };
+
+        // Load banner settings on page load
+        loadBannerSettings();
     </script>
 </body>
 </html>
